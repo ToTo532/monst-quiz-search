@@ -1,65 +1,128 @@
-import Image from "next/image";
+"use client";
+
+import { useMemo, useState } from "react";
+import quizzes from "../data/quizzes.json";
+import ResultList from "../components/ResultList";
+
+interface HintItem {
+  category: string;
+  text: string;
+}
+
+interface Quiz {
+  answer: string;
+  hints: HintItem[];
+}
 
 export default function Home() {
+  const [inputWord, setInputWord] = useState("");
+  const [searchTags, setSearchTags] = useState<string[]>([]);
+  const [selectedQuiz, setSelectedQuiz] = useState<Quiz | null>(null);
+
+  const handleAddTag = () => {
+    const trimmed = inputWord.trim();
+    if (trimmed !== "" && !searchTags.includes(trimmed)) {
+      setSearchTags([...searchTags, trimmed]);
+      setInputWord("");
+      setSelectedQuiz(null);
+    }
+  };
+
+  const handleRemoveTag = (tagToRemove: string) => {
+    setSearchTags(searchTags.filter((tag) => tag !== tagToRemove));
+    setSelectedQuiz(null);
+  };
+
+  const results = useMemo(() => {
+    const activeKeywords = [...searchTags];
+    if (inputWord.trim() !== "") {
+      activeKeywords.push(inputWord.trim());
+    }
+
+    if (activeKeywords.length === 0) {
+      return quizzes as Quiz[];
+    }
+
+    return (quizzes as Quiz[]).filter((quiz) =>
+      activeKeywords.every((keyword) =>
+        // ★ここを修正：hint.text の中身にキーワードが含まれるかチェック
+        quiz.hints.some((hint) =>
+          hint.text.toLowerCase().includes(keyword.toLowerCase())
+        )
+      )
+    );
+  }, [searchTags, inputWord]);
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+    <main className="min-h-screen bg-slate-100 p-6 md:p-12">
+      <div className="mx-auto max-w-2xl">
+        
+        <h1 className="mb-2 text-center text-3xl font-extrabold text-slate-800 tracking-wide">
+          🔍 モンストクイズ検索
+        </h1>
+        <p className="mb-8 text-center text-sm text-gray-500">
+          複数のヒントを掛け合わせてキャラを1本釣る
+        </p>
+
+        {/* 検索入力欄と条件追加ボタン */}
+        <div className="flex gap-2 mb-4">
+          <input
+            className="w-full rounded-xl border border-gray-300 bg-white p-4 text-lg shadow-sm focus:border-blue-500 focus:outline-none transition"
+            placeholder="ヒントワードを入力..."
+            value={inputWord}
+            onChange={(e) => {
+              setInputWord(e.target.value);
+              setSelectedQuiz(null);
+            }}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") handleAddTag();
+            }}
+          />
+          <button
+            onClick={handleAddTag}
+            className="rounded-xl bg-blue-500 px-5 text-white font-bold hover:bg-blue-600 transition shadow-sm active:scale-95 text-sm md:text-base whitespace-nowrap"
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+            ＋条件追加
+          </button>
         </div>
-      </main>
-    </div>
+
+        {/* 追加された検索条件（タグ一覧） */}
+        {searchTags.length > 0 && (
+          <div className="flex flex-wrap gap-2 mb-6">
+            {searchTags.map((tag) => (
+              <span
+                key={tag}
+                className="inline-flex items-center gap-1.5 rounded-full bg-blue-100 px-4 py-1.5 text-sm font-semibold text-blue-800 shadow-sm"
+              >
+                {tag}
+                <button
+                  onClick={() => handleRemoveTag(tag)}
+                  className="rounded-full p-0.5 hover:bg-blue-200 transition text-blue-600 font-bold"
+                >
+                  ✕
+                </button>
+              </span>
+            ))}
+          </div>
+        )}
+
+        {/* 検索して見つからなかったとき */}
+        {results.length === 0 && (
+          <div className="rounded-xl bg-white p-6 shadow text-center text-gray-400">
+            一致するキャラが見つかりませんでした。条件を変えてみてください。
+          </div>
+        )}
+
+        {/* 検索結果一覧 */}
+        {results.length > 0 && (
+          <ResultList 
+            results={results} 
+            selectedQuiz={selectedQuiz} 
+            onSelectQuiz={setSelectedQuiz} 
+          />
+        )}
+
+      </div>
+    </main>
   );
 }
