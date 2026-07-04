@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+// ★ Vercel Analytics を読み込む
+import { Analytics } from "@vercel/analytics/react";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -12,14 +14,9 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-// ★ここに「絶対に検索に載せない（noindex）」という設定を直接書き込んだよ！
 export const metadata: Metadata = {
-  title: "モンストDEクイズ検索",
-  description: "ヒントワードから、クイズDEストライクの答えを検索",
-  robots: {
-    index: false,
-    follow: false,
-  },
+  title: "モンストクイズ検索",
+  description: "身内向けの秘密のクイズ検索サイトです",
 };
 
 export default function RootLayout({
@@ -29,10 +26,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ja">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         {children}
+        {/* ★ ここに Analytics タグを配置する */}
+        <Analytics />
       </body>
     </html>
   );
