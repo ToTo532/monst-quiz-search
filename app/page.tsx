@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import quizzes from "../data/quizzes.json";
 import ResultList from "../components/ResultList";
+import AdMaxOverlay from "@/components/AdMaxOverlay";
 
 interface HintItem {
   category: string;
@@ -121,7 +122,7 @@ export default function Home() {
             onSelectQuiz={setSelectedQuiz} 
           />
         )}
-
+      <AdMaxOverlay />
       </div>
     </main>
   );
