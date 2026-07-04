@@ -58,10 +58,10 @@ export default function Home() {
       <div className="mx-auto max-w-2xl">
         
         <h1 className="mb-2 text-center text-3xl font-extrabold text-slate-800 tracking-wide">
-          🔍 モンストクイズ検索
+          モンストDEクイズ検索
         </h1>
         <p className="mb-8 text-center text-sm text-gray-500">
-          複数のヒントを掛け合わせてキャラを1本釣る
+          ヒントワードから、クイズDEストライクの答えを検索
         </p>
 
         {/* 検索入力欄と条件追加ボタン */}
