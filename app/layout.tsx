@@ -14,8 +14,8 @@ const geistMono = Geist_Mono({
 
 // ★ここに「絶対に検索に載せない（noindex）」という設定を直接書き込んだよ！
 export const metadata: Metadata = {
-  title: "モンストクイズ検索",
-  description: "複数のヒントからキャラを特定するクイズ検索サイト",
+  title: "モンストDEクイズ検索",
+  description: "ヒントワードから、クイズDEストライクの答えを検索",
   robots: {
     index: false,
     follow: false,
