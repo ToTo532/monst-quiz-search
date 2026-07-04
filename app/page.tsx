@@ -58,7 +58,7 @@ export default function Home() {
       <div className="mx-auto max-w-2xl">
         
         <h1 className="mb-2 text-center text-3xl font-extrabold text-slate-800 tracking-wide">
-          モンストDEクイズ検索
+          モンスト クイズDEストライク検索
         </h1>
         <p className="mb-8 text-center text-sm text-gray-500">
           ヒントワードから、クイズDEストライクの答えを検索
