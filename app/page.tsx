@@ -67,7 +67,7 @@ export default function Home() {
         {/* 検索入力欄と条件追加ボタン */}
         <div className="flex gap-2 mb-4">
           <input
-            className="w-full rounded-xl border border-gray-300 bg-white p-4 text-lg shadow-sm focus:border-blue-500 focus:outline-none transition"
+            className="w-full rounded-xl border border-gray-400 bg-white p-4 text-lg text-gray-700 placeholder-gray-400 shadow-sm focus:border-blue-500 focus:outline-none transition font-medium"
             placeholder="ヒントワードを入力..."
             value={inputWord}
             onChange={(e) => {
