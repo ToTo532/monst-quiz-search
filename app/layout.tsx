@@ -15,8 +15,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "モンストクイズ検索",
-  description: "身内向けの秘密のクイズ検索サイトです",
+  title: "モンスト クイズDEストライク検索",
+  description: "ヒントワードから、クイズDEストライクの答えを検索",
 };
 
 export default function RootLayout({
