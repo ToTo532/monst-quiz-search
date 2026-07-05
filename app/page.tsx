@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState, useEffect } from "react";
+import { useMemo, useState } from "react";
 import quizzes from "../data/quizzes.json";
 import ResultList from "../components/ResultList";
 
@@ -18,22 +18,6 @@ export default function Home() {
   const [inputWord, setInputWord] = useState("");
   const [searchTags, setSearchTags] = useState<string[]>([]);
   const [selectedQuiz, setSelectedQuiz] = useState<Quiz | null>(null);
-
-  // 画面が読み込まれたら、安全に忍者AdMaxのスクリプトを呼び出す仕組み
-  useEffect(() => {
-    const script = document.createElement("script");
-    script.src = "https://adm.shinobi.jp/s/89b044fcc5aabec3f13be5bbc2e0070c";
-    script.async = true;
-    
-    const container = document.getElementById("admax-banner-container");
-    if (container) {
-      container.appendChild(script);
-    }
-
-    return () => {
-      if (container) container.innerHTML = "";
-    };
-  }, []);
 
   const handleAddTag = () => {
     const trimmed = inputWord.trim();
@@ -120,16 +104,6 @@ export default function Home() {
             ))}
           </div>
         )}
-
-        {/* ★ここに忍者AdMaxのバナー広告枠を設置したよ（中央寄せ） */}
-        <div className="my-6 flex justify-center">
-          <div 
-            id="admax-banner-container" 
-            className="min-h-[250px] w-[300px] bg-slate-50 border border-dashed border-gray-300 rounded-xl flex items-center justify-center text-xs text-gray-400"
-          >
-            広告読み込み中...
-          </div>
-        </div>
 
         {/* 検索して見つからなかったとき */}
         {results.length === 0 && (
